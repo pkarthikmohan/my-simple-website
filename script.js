@@ -33,16 +33,8 @@ function updateClock() {
 
 setInterval(updateClock, 1000);
 updateClock();
-const responses = {
-    "hello": "Hi there! How can I help you?",
-    "how are you": "I'm just a bot, but I'm doing great! How about you?",
-    "what is your name": "I'm a simple AI chatbot!",
-    "bye": "Goodbye! Have a great day!",
-    "default": "I'm not sure how to respond to that. Try asking something else!"
-};
-
-function sendMessage() {
-    let userInput = document.getElementById("user-input").value.toLowerCase();
+async function sendMessage() {
+    let userInput = document.getElementById("user-input").value;
     let chatBox = document.getElementById("chat-box");
 
     if (userInput.trim() === "") return;
@@ -50,19 +42,22 @@ function sendMessage() {
     // Display user message
     chatBox.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
 
-    // Get bot response
-    let botResponse = responses[userInput] || responses["default"];
+    // Send request to an AI chatbot API (Uses a free public AI chatbot)
+    try {
+        let response = await fetch(`https://api.monkedev.com/fun/chat?msg=${encodeURIComponent(userInput)}`);
+        let data = await response.json();
 
-    setTimeout(() => {
-        chatBox.innerHTML += `<p><strong>Bot:</strong> ${botResponse}</p>`;
-        chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to latest message
-    }, 500);
+        chatBox.innerHTML += `<p><strong>Bot:</strong> ${data.response}</p>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    } catch (error) {
+        chatBox.innerHTML += `<p><strong>Bot:</strong> Sorry, something went wrong.</p>`;
+    }
 
-    // Clear input
+    // Clear input field
     document.getElementById("user-input").value = "";
 }
 
-// Allow sending message by pressing Enter
+// Allow pressing Enter to send message
 function handleKeyPress(event) {
     if (event.key === "Enter") {
         sendMessage();
