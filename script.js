@@ -42,12 +42,16 @@ async function sendMessage() {
     // Display user message
     chatBox.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
 
-    // Send request to an AI chatbot API (Uses a free public AI chatbot)
+    // Free chatbot API
     try {
-        let response = await fetch(`https://api.monkedev.com/fun/chat?msg=${encodeURIComponent(userInput)}`);
-        let data = await response.json();
+        let response = await fetch("https://api.simsimi.vn/v2/simtalk", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: userInput, lc: "en" }) // "en" for English
+        });
 
-        chatBox.innerHTML += `<p><strong>Bot:</strong> ${data.response}</p>`;
+        let data = await response.json();
+        chatBox.innerHTML += `<p><strong>Bot:</strong> ${data.message || "I don't understand."}</p>`;
         chatBox.scrollTop = chatBox.scrollHeight;
     } catch (error) {
         chatBox.innerHTML += `<p><strong>Bot:</strong> Sorry, something went wrong.</p>`;
