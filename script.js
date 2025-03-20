@@ -34,36 +34,33 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 async function sendMessage() {
-    let userInput = document.getElementById("user-input").value;
+    let userInput = document.getElementById("user-input").value.trim();
     let chatBox = document.getElementById("chat-box");
 
-    if (userInput.trim() === "") return;
+    if (userInput === "") return; // Prevent empty messages
 
     // Display user message
     chatBox.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
 
-    // Free chatbot API
     try {
-        let response = await fetch("https://api.simsimi.vn/v2/simtalk", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: userInput, lc: "en" }) // "en" for English
-        });
-
+        // Use a working chatbot API (replace if needed)
+        let response = await fetch(`https://api.monkedev.com/fun/chat?msg=${encodeURIComponent(userInput)}`);
         let data = await response.json();
-        chatBox.innerHTML += `<p><strong>Bot:</strong> ${data.message || "I don't understand."}</p>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
+
+        chatBox.innerHTML += `<p><strong>Bot:</strong> ${data.response}</p>`;
     } catch (error) {
         chatBox.innerHTML += `<p><strong>Bot:</strong> Sorry, something went wrong.</p>`;
     }
 
     // Clear input field
     document.getElementById("user-input").value = "";
+    chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
 }
 
-// Allow pressing Enter to send message
+// Allow pressing "Enter" to send message
 function handleKeyPress(event) {
     if (event.key === "Enter") {
         sendMessage();
     }
 }
+
