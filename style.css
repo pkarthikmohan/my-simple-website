@@ -26,6 +26,12 @@ button {
 button:hover {
     background-color: #218838;
 }
+.dark-mode {
+    background-color: #222;
+    color: white;
+}
+
 #message {
     transition: opacity 0.5s ease-in-out;
 }
+
